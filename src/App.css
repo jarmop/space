@@ -1,0 +1,13 @@
+.space {
+    display: flex;
+    align-items: center;
+    width: fit-content;
+    min-width: 100%;
+    padding: 10px;
+    background-color: black;
+    min-height: 300px;
+}
+
+.planet {
+    border-radius: 50%;
+}
