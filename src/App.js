@@ -1,84 +1,40 @@
 import React from 'react';
 import './App.css';
+import * as data from './data';
 
-const planets = [
-  {
-    color: 'yellow',
-    radius: 696342,
-    distanceToSun: 0,
-  },
-  {
-    color: 'lightsalmon',
-    radius: 2439.7,
-    distanceToSun: 57.91, // million km
-  },
-  {
-    color: 'orange',
-    radius: 6051.8,
-    distanceToSun: 108.2,
-  },
-  {
-    color: 'lightblue',
-    radius: 6371,
-    distanceToSun: 149.6,
-  },
-  {
-    color: 'orangered',
-    radius: 3389.5,
-    distanceToSun: 227.9,
-  },
-  {
-    color: 'darkorange',
-    radius: 69911,
-    distanceToSun: 778.5,
-  },
-  {
-    color: 'peru',
-    radius: 58232,
-    distanceToSun: 1426,
-  },
-  {
-    color: 'lightblue',
-    radius: 25362,
-    distanceToSun: 2871,
-  },
-  {
-    color: 'deepskyblue',
-    radius: 24622,
-    distanceToSun: 4495,
-  },
-  {
-    color: 'lightgray',
-    radius: 1188.3,
-    distanceToSun: 7500,
-  },
-];
+const SYSTEM_OPTION_SUN = 1;
+const SYSTEM_OPTION_KEPLER_90 = 2;
+const SYSTEM_OPTION_TRAPPIST_1 = 3;
 
 const VIEW_OPTION_SIZE = 1;
 const VIEW_OPTION_DISTANCE = 2;
-// const SPACE_HEIGHT = 400;
 
 class App extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      viewOption: VIEW_OPTION_SIZE,
+      system: SYSTEM_OPTION_SUN,
+      view: VIEW_OPTION_SIZE,
     };
   }
 
-  setViewOption(viewOption) {
-    this.setState({viewOption: viewOption});
+  setView(view) {
+    this.setState({view: view});
+  }
+
+  setSystem(system) {
+    this.setState({system: system});
   }
 
   render() {
-    console.log('render');
-    console.log(this.state.viewOption);
-    console.log(VIEW_OPTION_SIZE);
-    console.log(VIEW_OPTION_DISTANCE);
-    console.log(this.state.viewOption === VIEW_OPTION_SIZE);
-    console.log(this.state.viewOption === VIEW_OPTION_DISTANCE);
     let previousPlanetsDistanceToSun = 0;
+    let systems = {};
+    systems[SYSTEM_OPTION_SUN] = data.sunPlanets;
+    systems[SYSTEM_OPTION_KEPLER_90] = data.kepler90Planets;
+    systems[SYSTEM_OPTION_TRAPPIST_1] = data.trappist1Planets;
+
+    let planets = systems[this.state.system];
     let planetsView = planets.map(planet => {
           let distanceToPrevious = planet.distanceToSun - previousPlanetsDistanceToSun;
           previousPlanetsDistanceToSun = planet.distanceToSun;
@@ -87,8 +43,8 @@ class App extends React.Component {
                   key={planet.distanceToSun}
                   planet={planet}
                   distanceToPrevious={distanceToPrevious}
-                  showRelativeDiameter={this.state.viewOption === VIEW_OPTION_SIZE}
-                  showRelativeDistance={this.state.viewOption === VIEW_OPTION_DISTANCE}
+                  showRelativeDiameter={this.state.view === VIEW_OPTION_SIZE}
+                  showRelativeDistance={this.state.view === VIEW_OPTION_DISTANCE}
               />
           )
         }
@@ -96,24 +52,31 @@ class App extends React.Component {
 
     return (
         <div>
+          <select
+              defaultValue={this.state.system}
+              onChange={e => this.setSystem(parseInt(e.currentTarget.value))}
+          >
+            <option value={SYSTEM_OPTION_SUN}>Sun</option>
+            <option value={SYSTEM_OPTION_KEPLER_90}>Kepler-90</option>
+            <option value={SYSTEM_OPTION_TRAPPIST_1}>Trappist-1</option>
+          </select>
           <input
               type="radio"
               name="view"
               value={VIEW_OPTION_SIZE}
-              defaultChecked={this.state.viewOption === VIEW_OPTION_SIZE}
-              onChange={e => this.setViewOption(parseInt(e.currentTarget.value))}
+              defaultChecked={this.state.view === VIEW_OPTION_SIZE}
+              onChange={e => this.setView(parseInt(e.currentTarget.value))}
           />
           <label htmlFor="size">size</label>
           <input
               type="radio"
               name="view"
               value={VIEW_OPTION_DISTANCE}
-              defaultChecked={this.state.viewOption === VIEW_OPTION_DISTANCE}
-              onChange={e => this.setViewOption(parseInt(e.currentTarget.value))}
+              defaultChecked={this.state.view === VIEW_OPTION_DISTANCE}
+              onChange={e => this.setView(parseInt(e.currentTarget.value))}
           />
           <label htmlFor="distance">distance</label>
           <div className="space">
-          {/*<div className="space" style={{height: SPACE_HEIGHT}}>*/}
             {planetsView}
           </div>
         </div>
@@ -121,8 +84,8 @@ class App extends React.Component {
   }
 }
 
-const radiusMultiplier = .0008;
-const distanceMultiplier = 0.1;
+const radiusMultiplier = .001;
+const distanceMultiplier = 0.5;
 const defaultDiameter = 1;
 const defaultDistance = 30;
 
