@@ -5,6 +5,8 @@ import * as data from './data';
 const SYSTEM_OPTION_SUN = 1;
 const SYSTEM_OPTION_KEPLER_90 = 2;
 const SYSTEM_OPTION_TRAPPIST_1 = 3;
+const SYSTEM_OPTION_GLIESE_667 = 4;
+const SYSTEM_OPTION_GLIESE_667C = 5;
 
 const VIEW_OPTION_SIZE = 1;
 const VIEW_OPTION_DISTANCE = 2;
@@ -16,6 +18,7 @@ class App extends React.Component {
     this.state = {
       system: SYSTEM_OPTION_SUN,
       view: VIEW_OPTION_SIZE,
+      // view: VIEW_OPTION_DISTANCE,
     };
   }
 
@@ -33,6 +36,8 @@ class App extends React.Component {
     systems[SYSTEM_OPTION_SUN] = data.sunPlanets;
     systems[SYSTEM_OPTION_KEPLER_90] = data.kepler90Planets;
     systems[SYSTEM_OPTION_TRAPPIST_1] = data.trappist1Planets;
+    systems[SYSTEM_OPTION_GLIESE_667] = data.gliese667Planets;
+    systems[SYSTEM_OPTION_GLIESE_667C] = data.gliese667CPlanets;
 
     let planets = systems[this.state.system];
     let planetsView = planets.map(planet => {
@@ -59,6 +64,8 @@ class App extends React.Component {
             <option value={SYSTEM_OPTION_SUN}>Sun</option>
             <option value={SYSTEM_OPTION_KEPLER_90}>Kepler-90</option>
             <option value={SYSTEM_OPTION_TRAPPIST_1}>Trappist-1</option>
+            <option value={SYSTEM_OPTION_GLIESE_667}>Gliese 667</option>
+            <option value={SYSTEM_OPTION_GLIESE_667C}>Gliese 667 C</option>
           </select>
           <input
               type="radio"
@@ -85,7 +92,7 @@ class App extends React.Component {
 }
 
 const radiusMultiplier = .001;
-const distanceMultiplier = 0.5;
+const distanceMultiplier = .1;
 const defaultDiameter = 1;
 const defaultDistance = 30;
 

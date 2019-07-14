@@ -145,3 +145,39 @@ export const trappist1Planets = [
     distanceToSun: 0.06193488 * EARTH_DISTANCE_TO_SUN,
   },
 ];
+
+export const gliese667Planets = [
+  {
+    color: 'yellow',
+    radius: 0.76 * SUN_RADIUS,
+    distanceToSun: 0,
+  },
+  {
+    color: 'yellow',
+    radius: 0.70 * SUN_RADIUS,
+    distanceToSun: 12.6 * EARTH_DISTANCE_TO_SUN,
+  },
+  {
+    color: 'red',
+    radius: 0.42 * SUN_RADIUS,
+    distanceToSun: 230 * EARTH_DISTANCE_TO_SUN,
+  }
+];
+
+export const gliese667CPlanets = [
+  {
+    color: 'red',
+    radius: 0.42 * SUN_RADIUS,
+    distanceToSun: 0,
+  },
+  {
+    color: 'yellow',
+    radius: 5.6 * EARTH_RADIUS,
+    distanceToSun: 0.05 * EARTH_DISTANCE_TO_SUN,
+  },
+  {
+    color: 'yellow',
+    radius: 3.709 * EARTH_RADIUS,
+    distanceToSun: 0.125 * EARTH_DISTANCE_TO_SUN,
+  }
+];
