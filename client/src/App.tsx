@@ -1,31 +1,35 @@
 import { useState } from "react";
 import "./App.css";
-import * as data from './data';
+import { data } from './data.ts';
 
 type Planet = {
   color: string,
   radius: number,
+  mass?: number,
   distanceToSun: number,
 }
 
-type SystemOption = "SUN" | "KEPLER_90" | "TRAPPIST_1" | "GLIESE_667" | "GLIESE_667C"
-type ViewOption = "SIZE" | "DISTANCE"
+type SystemOption = keyof typeof data
+type ViewOption = "RADIUS" | "MASS" | "DISTANCE"
 
 function App() {
 
-  const [system, setSystem] = useState<SystemOption>("SUN")
-  const [view, setView] = useState<ViewOption>("SIZE")
+  const [system, setSystem] = useState<SystemOption>("sun")
+  const [view, setView] = useState<ViewOption>("RADIUS")
 
   let previousPlanetsDistanceToSun = 0;
-  const systems: Record<SystemOption, Array<Planet>> = {
-    SUN: data.sunPlanets,
-    KEPLER_90: data.kepler90Planets,
-    TRAPPIST_1: data.trappist1Planets,
-    GLIESE_667: data.gliese667Planets,
-    GLIESE_667C: data.gliese667CPlanets,
-  };
+  // const systems: Record<SystemOption, Array<Planet>> = {
+  //   sun: data.sun,
+  //   alphaCentauri: data.alphaCentauriPlanets,
+  //   proximaCentauri: data.proximaCentauriPlanets,
+  //   SIRIUS: data.siriusPlanets,
+  //   KEPLER_90: data.kepler90Planets,
+  //   TRAPPIST_1: data.trappist1Planets,
+  //   GLIESE_667: data.gliese667Planets,
+  //   GLIESE_667C: data.gliese667CPlanets,
+  // };
 
-  const planets = systems[system];
+  const planets = data[system].planets;
   const planetsView = planets.map(planet => {
     const distanceToPrevious = planet.distanceToSun - previousPlanetsDistanceToSun;
     previousPlanetsDistanceToSun = planet.distanceToSun;
@@ -34,7 +38,8 @@ function App() {
         key={planet.distanceToSun}
         planet={planet}
         distanceToPrevious={distanceToPrevious}
-        showRelativeDiameter={view === "SIZE"}
+        showRelativeDiameter={view === "RADIUS"}
+        showRelativeMass={view === "MASS"}
         showRelativeDistance={view === "DISTANCE"}
       />
     )
@@ -46,20 +51,30 @@ function App() {
         defaultValue={system}
         onChange={e => setSystem(e.currentTarget.value as SystemOption)}
       >
-        <option value="SUN">Sun</option>
-        <option value="KEPLER_90">Kepler-90</option>
-        <option value="TRAPPIST_1">Trappist-1</option>
-        <option value="GLIESE_667">Gliese 667</option>
-        <option value="GLIESE_667C">Gliese 667 C</option>
+        {
+          Object.keys(data).map((key) =>
+            <option key={key} value={key}>{data[key as SystemOption].name}</option>
+
+          )
+        }
       </select>
       <input
         type="radio"
         name="view"
-        value="SIZE"
-        defaultChecked={view === "SIZE"}
+        value="RADIUS"
+        defaultChecked={view === "RADIUS"}
         onChange={e => setView(e.currentTarget.value as ViewOption)}
       />
-      <label htmlFor="size">size</label>
+      <label htmlFor="radius">Radius</label>
+
+      <input
+        type="radio"
+        name="view"
+        value="MASS"
+        defaultChecked={view === "MASS"}
+        onChange={e => setView(e.currentTarget.value as ViewOption)}
+      />
+      <label htmlFor="mass">Mass</label>
       <input
         type="radio"
         name="view"
@@ -67,7 +82,7 @@ function App() {
         defaultChecked={view === "DISTANCE"}
         onChange={e => setView(e.currentTarget.value as ViewOption)}
       />
-      <label htmlFor="distance">distance</label>
+      <label htmlFor="distance">Distance</label>
       <div className="space">
         {planetsView}
       </div>
@@ -75,7 +90,8 @@ function App() {
   );
 }
 
-const radiusMultiplier = .001;
+const radiusMultiplier = 1e-3;
+const massMultiplier = 1e-28;
 const distanceMultiplier = .1;
 const defaultDiameter = 1;
 const defaultDistance = 30;
@@ -84,11 +100,18 @@ interface PlanetViewProps {
   planet: Planet,
   distanceToPrevious: number,
   showRelativeDiameter: boolean,
+  showRelativeMass: boolean,
   showRelativeDistance: boolean
 }
 
-const PlanetView = ({ planet, distanceToPrevious, showRelativeDiameter, showRelativeDistance }: PlanetViewProps) => {
-  const diameter = showRelativeDiameter ? planet.radius * radiusMultiplier : defaultDiameter;
+const PlanetView = ({ planet, distanceToPrevious, showRelativeDiameter, showRelativeMass, showRelativeDistance }: PlanetViewProps) => {
+  let diameter = defaultDiameter
+  if (showRelativeDiameter) {
+    diameter = planet.radius * radiusMultiplier
+  } else if (showRelativeMass) {
+    diameter = planet.mass ? planet.mass * massMultiplier : 0
+  }
+
   return (
     <div className="planet" style={{
       backgroundColor: planet.color,
