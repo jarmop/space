@@ -4,7 +4,125 @@ const EARTH_RADIUS = 6371;
 const EARTH_MASS = 5.972e24;
 const EARTH_DISTANCE_TO_SUN = 149.6;
 
-export const data = {
+// type Star = {
+//     name: string, color: string, radius: number, mass: number
+// }
+
+const stars = [
+    {
+        name: 'Sun',
+        color: 'yellow',
+        radius: 1 * SOLAR_RADIUS,
+        mass: 1 * SOLAR_MASS,
+    },
+    {
+        name: 'AlphaCentauri A',
+        color: 'yellow',
+        radius: 1.2175 * SOLAR_RADIUS,
+        mass: 1.0788 * SOLAR_MASS,
+        // distanceToSun: 0,
+    },
+    {
+        name: 'AlphaCentauri B',
+        color: 'yellow',
+        radius: 0.8591 * SOLAR_RADIUS,
+        mass: 0.9092 * SOLAR_MASS,
+        // 11.2 - 35.6 AU
+        // distanceToSun: 23 * EARTH_DISTANCE_TO_SUN,
+    },
+    {
+        name: 'Proxima Centauri',
+        color: 'red',
+        radius: 0.1542 * SOLAR_RADIUS,
+        mass: 0.1221 * SOLAR_MASS,
+        // 0.21 light-years
+        // distanceToSun: 13000 * EARTH_DISTANCE_TO_SUN,
+    },
+    {
+        name: "Barnard's Star",
+        color: 'red',
+        radius: 0.187 * SOLAR_RADIUS,
+        mass: 0.162 * SOLAR_MASS,
+    },
+    {
+        name: 'Sirius A',
+        color: 'lightblue',
+        radius: 1.713 * SOLAR_RADIUS,
+        mass: 2.063 * SOLAR_MASS,
+    },
+    {
+        name: 'Sirius B',
+        color: 'white',
+        radius: 0.008098 * SOLAR_RADIUS,
+        mass: 1.018 * SOLAR_MASS,
+    },
+    {
+        name: 'Kepler-90',
+        color: 'yellow',
+        radius: 1.2 * SOLAR_RADIUS,
+        mass: 1.2 * SOLAR_MASS,
+    },
+    {
+        name: 'Trappist-1',
+        color: 'salmon',
+        radius: 0.1192 * SOLAR_RADIUS,
+        mass: 0.0898 * SOLAR_MASS,
+    },
+    {
+        name: 'Gliese 667 C',
+        color: 'red',
+        radius: 0.34 * SOLAR_RADIUS,
+        mass: 0.33 * SOLAR_MASS,
+    },
+    {
+        name: 'Lalande 21185',
+        color: 'red',
+        radius: 0.392 * SOLAR_RADIUS,
+        mass: 	0.389 * SOLAR_MASS,
+    },
+    {
+        name: 'Epsilon Eridani',
+        color: 'yellow',
+        radius: 0.738 * SOLAR_RADIUS,
+        mass: 	0.82 * SOLAR_MASS,
+    },
+    {
+        name: 'Lacaille 9352',
+        color: 'orange',
+        radius: 0.474 * SOLAR_RADIUS,
+        mass: 	0.479 * SOLAR_MASS,
+    },
+] as const
+
+export type Star = typeof stars[number]
+
+type StarByName = Record<Star['name'], Star>
+
+export const starByName = stars.reduce((acc, curr) => {
+    acc[curr.name] = curr
+
+    return acc
+}, {} as StarByName)
+
+
+
+export const starsCloseToSun: { name: Star['name'], distanceToCenter: number }[] = [
+    { name: 'Sun', distanceToCenter: 0 },
+    { name: 'Proxima Centauri', distanceToCenter: 4.2465 },
+    { name: 'AlphaCentauri A', distanceToCenter: 4.3441 },
+    { name: 'AlphaCentauri B', distanceToCenter: 4.3441 },
+    { name: "Barnard's Star", distanceToCenter: 5.9629 },
+    { name: 'Lalande 21185', distanceToCenter: 8.3044 },
+    { name: 'Sirius A', distanceToCenter: 8.7094 },
+    { name: 'Sirius B', distanceToCenter: 8.7094 },
+    { name: 'Epsilon Eridani', distanceToCenter: 10.4749 },
+    { name: 'Lacaille 9352', distanceToCenter: 10.7241 },
+    { name: 'Gliese 667 C', distanceToCenter: 23 },
+    { name: 'Trappist-1', distanceToCenter: 40.66 },
+    // { name: 'Kepler-90', distanceToCenter: 2790 },
+]
+
+export const starSystems = {
     sun: {
         name: 'Sun',
         planets: [
